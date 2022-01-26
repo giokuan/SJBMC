@@ -5,9 +5,17 @@ from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QVBoxLayout, QH
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox,QFileDialog
 import sys
+from cert import Ui_MainClear
 
 
 class Ui_MainWindow(object):
+
+    def open_window(self):
+        self.window =QtWidgets.QMainWindow()
+        self.ui = Ui_MainClear()
+        self.ui.setupUi(self.window)
+        #MainWindow.close()
+        self.window.show()
 
     def messageBox(self,title,message):
         mess=QtWidgets.QMessageBox()
@@ -901,7 +909,16 @@ class Ui_MainWindow(object):
         self.camera_btn.clicked.connect(self.browse_image)
         self.camera_btn.setEnabled(False)
 
-
+        #COL BUTTON
+        self.col_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.col_btn.setGeometry(QtCore.QRect(90, 400, 41, 21))
+        self.col_btn.setStyleSheet("background-color:\
+            qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 0, 0, 0),\
+            stop:1 rgba(255, 255, 255, 255));")
+        self.col_btn.setText("COL")
+        self.col_btn.setObjectName("col_btn")
+        self.col_btn.clicked.connect(self.open_window)
+        self.col_btn.setEnabled(True)
         
 
         #ADD PICTURE CAMERA TEXTBOX
@@ -1142,6 +1159,7 @@ class Ui_MainWindow(object):
         self.address_label.raise_()
         self.address_edit.raise_()
         self.camera_btn.raise_()
+        self.col_btn.raise_()
         self.addPic_edit.raise_()
         self.root_label.raise_()
         self.root_edit.raise_()
