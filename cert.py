@@ -1,4 +1,3 @@
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtPrintSupport import QPrintDialog, QPrintPreviewDialog, QPrinter
 from PyQt5.Qt import QFileInfo
@@ -24,7 +23,6 @@ class Ui_MainClear(object):
         screenPixmap = screenPixmap.scaledToWidth(int(screenPixmap.width() *10500/screenPixmap.width()))
         painter.drawPixmap(10,10, screenPixmap)
         painter.end()
-  
 
 
     def printPreviewListMethod(self):
@@ -32,8 +30,6 @@ class Ui_MainClear(object):
         dialog.paintRequested.connect(self.handlePaintRequest)
         dialog.exec_()
     
-
-
 
     def setupUi(self, MainClear):
         MainClear.setObjectName("MainClear")
@@ -113,7 +109,6 @@ class Ui_MainClear(object):
         self.date_issued_edit.setObjectName("date_issued_edit")
        
         
-        
         #PRINT BUTTON
         self.print_btn = QtWidgets.QPushButton(self.centralwidget)
         self.print_btn.setGeometry(QtCore.QRect(360, 773, 251, 41))
@@ -131,14 +126,11 @@ class Ui_MainClear(object):
         self.print_btn.setIcon(icon)
 
 
-       
-
-
 
         MainClear.setCentralWidget(self.centralwidget)
-
         self.retranslateUi(MainClear)
         QtCore.QMetaObject.connectSlotsByName(MainClear)
+
 
     def retranslateUi(self, MainClear):
         _translate = QtCore.QCoreApplication.translate
