@@ -11,11 +11,13 @@ from cert import Ui_MainClear
 class Ui_MainWindow(object):
 
     def open_window(self):
+        """ Open the cert form window"""
         self.window =QtWidgets.QMainWindow()
         self.ui = Ui_MainClear()
         self.ui.setupUi(self.window)
         #MainWindow.close()
         self.window.show()
+
 
     def messageBox(self,title,message):
         mess=QtWidgets.QMessageBox()
@@ -29,7 +31,9 @@ class Ui_MainWindow(object):
         mess.setStandardButtons(QtWidgets.QMessageBox.Ok)
         mess.exec_() 
 
+
     def exit_app(self):
+        """ close or exit the app"""
         msg=QMessageBox()
         msg.setStyleSheet('QMessageBox {background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 255)); color: white;}\
             QPushButton{color: white; font-size: 16px; background-color: rgb(75,75,75); \
@@ -47,21 +51,29 @@ class Ui_MainWindow(object):
         if res == QMessageBox.Cancel:
             pass 
 
+
     def browse_image(self):
+        """ enable you to choose or browse image in your computer file"""
         filename = QFileDialog.getOpenFileName( caption = "Open file", directory=None, filter="Image (*.png * .jpg);;All Files(*.*)")   
         self.addPic_edit.setText(filename[0])
         self.load_image()
 
+
     def load_image(self):
+        """Load image from your computer"""
         p = self.addPic_edit.text()
         self.picture_label.setPixmap(QtGui.QPixmap(p)) 
+
 
     def default(self):
         self.addPic_edit.setText("logo/Men.png")
         self.picture_label.setPixmap(QtGui.QPixmap("logo/Men.png")) 
         pass
-        
+    
+
     def insert_data(self):
+        """ Save the information in the database"""
+
         p = self.addPic_edit.text()
         if len(p) == 0:
             self.messageBox("Add Photo","You have no photo selected, \n Default Photo will be use!")
@@ -128,7 +140,9 @@ class Ui_MainWindow(object):
                     self.cancel()
                     self.loadData()
 
+
     def cell_click_disabledTextbox(self):
+        """ return to view mode"""
         self.add_btn.setEnabled(True)
         self.save_btn.setEnabled(False)
         self.cancel_btn.setEnabled(False)
@@ -159,6 +173,8 @@ class Ui_MainWindow(object):
 
 
     def cell_click(self,columnCount,rowCount):
+        """ Give you the specific information of particular person when you clicked the
+        the member ID field """
 
         self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
         cur=self.conn.cursor()
@@ -199,9 +215,9 @@ class Ui_MainWindow(object):
                 self.addPic_edit.setText('logo/pic.png')
                 self.picture_label.setPixmap(QtGui.QPixmap("logo/pic.png"))
 
-
-        
+ 
     def loadData(self):
+        """ load data in the table"""
         
         row = 0
         try: 
@@ -226,7 +242,9 @@ class Ui_MainWindow(object):
         except mc.Error as e:
             print ("Error Occured")
 
+
     def update(self):
+        """ Update information and save information to the database"""
         p = self.addPic_edit.text() 
         with open(p, 'rb') as f:
             m=f.read()
@@ -291,6 +309,7 @@ class Ui_MainWindow(object):
 
 
     def add(self):
+        """ activate or enable all the fields """
         self.lname_edit.setEnabled(True)
         self.fname_edit.setEnabled(True)
         self.aka_edit.setEnabled(True)
@@ -331,7 +350,9 @@ class Ui_MainWindow(object):
         self.status_edit.setStyleSheet("background-color: rgb(24, 24, 24);color: rgb(6, 254, 192)")
         self.address_edit.setStyleSheet("background-color: rgb(24, 24, 24);color: rgb(6, 254, 192)")
     
+
     def cancel(self):
+        """Return to default """
         self.lname_edit.setEnabled(False)
         self.fname_edit.setEnabled(False)
         self.aka_edit.setEnabled(False)
@@ -376,6 +397,7 @@ class Ui_MainWindow(object):
 
         
     def refresh(self):
+        """ Clear all the fields"""
 
         self.id_edit.clear()
         self.lname_edit.clear()
@@ -416,7 +438,9 @@ class Ui_MainWindow(object):
         self.address_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
         self.loadData()
 
+
     def edit(self):
+        """ Edit the specific person in the database"""
         mem_id = self.id_edit.text()
         if len(mem_id) == 0:
             self.messageBox("Tau Gamma Phi", "No Data Found")
@@ -450,6 +474,7 @@ class Ui_MainWindow(object):
             self.status_edit.setStyleSheet("background-color: rgb(24, 24, 24);color: rgb(6, 254, 192)")
             self.address_edit.setStyleSheet("background-color: rgb(24, 24, 24);color: rgb(6, 254, 192)")
 
+
     def search_radio(self):
         self.search_btn.show()
         self.search_edit.show()
@@ -459,6 +484,7 @@ class Ui_MainWindow(object):
         self.search_lname_edit.clear()
         self.search_fname_edit.clear()
 
+
     def advance_radio(self):
         self.search_btn.hide()
         self.search_edit.hide()
@@ -467,7 +493,9 @@ class Ui_MainWindow(object):
         self.search_fname_edit.show()
         self.search_edit.clear()
 
-    def search(self):    
+
+    def search(self): 
+        """ return a person name or a chapter"""   
         row = 0
         try: 
             mydb = mc.connect(
@@ -494,6 +522,7 @@ class Ui_MainWindow(object):
 
     
     def advance_search(self):
+        """ return specific person"""
         row = 0
        
         mydb = mc.connect(
@@ -519,9 +548,6 @@ class Ui_MainWindow(object):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
     
     
-
-           
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1129, 788)
