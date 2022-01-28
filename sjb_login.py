@@ -20,6 +20,9 @@ class Ui_mainForm(object):
 
     def messageBox(self,title,message):
         mess=QtWidgets.QMessageBox()
+        mess.setStyleSheet('QMessageBox {background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 255)); color: white;}\
+            QPushButton{color: white; font-size: 16px; background-color: rgb(75,75,75);\
+            border-radius: 5px; padding: 10px; text-align: center;} QPushButton:hover{color: rgb(0, 170, 127);}')
         mess.setWindowTitle(title)
         mess.setWindowIcon(QtGui.QIcon('logo/ico_logo.ico'))
         mess.setText(message)
@@ -51,6 +54,9 @@ class Ui_mainForm(object):
     def setupUi(self, mainForm):
         mainForm.setObjectName("mainForm")
         mainForm.resize(588, 459)
+        mainForm.setMaximumSize(QtCore.QSize(588, 459))
+        mainForm.setMinimumSize(QtCore.QSize(588, 459))
+        mainForm.setWindowFlags( QtCore.Qt.WindowCloseButtonHint )
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("logo/ico_logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         mainForm.setWindowIcon(icon)
