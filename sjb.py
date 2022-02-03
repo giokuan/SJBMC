@@ -88,7 +88,9 @@ class Ui_MainWindow(object):
             fname=self.fname_edit.text()
             aka1=self.aka_edit.text()
             batch=self.batch_edit.text()
-            tbirth=self.tbirth_edit.text()
+            tbirth=self.tbirth_edit.date()
+            var_date = tbirth.toPyDate()
+
             current=self.current_edit.text()
             root=self.root_edit.text()
             status=self.status_edit.text()
@@ -98,7 +100,7 @@ class Ui_MainWindow(object):
        
             query=("INSERT INTO projecttau3 (last_name, first_name, aka, batch_name, T_birth, current_chapter, root_chapter, stat, address,photo) VALUES  (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s)")
             cur=self.conn.cursor()
-            data= cur.execute(query, (lname.upper(),fname.upper(),aka1.upper(),batch.upper(),tbirth.upper(),current.upper(),root.upper(),status.upper(),address.upper(),m))
+            data= cur.execute(query, (lname.upper(),fname.upper(),aka1.upper(),batch.upper(),var_date,current.upper(),root.upper(),status.upper(),address.upper(),m))
         
 
             if (data):
@@ -203,7 +205,7 @@ class Ui_MainWindow(object):
         self.fname_edit.setText(fname)
         self.aka_edit.setText(aka1)
         self.batch_edit.setText(batch)
-        self.tbirth_edit.setText(tbirth)
+        self.tbirth_edit.setDate(tbirth)
         self.current_edit.setText(current)
         self.root_edit.setText(root)
         self.status_edit.setText(status)
@@ -254,7 +256,8 @@ class Ui_MainWindow(object):
         fname=self.fname_edit.text()
         aka1=self.aka_edit.text()
         batch=self.batch_edit.text()
-        tbirth=self.tbirth_edit.text()
+        tbirth=self.tbirth_edit.date()
+        var_date = tbirth.toPyDate()
         current=self.current_edit.text()
         root=self.root_edit.text()
         status=self.status_edit.text()
@@ -264,7 +267,7 @@ class Ui_MainWindow(object):
         cur=self.conn.cursor()
 
         sql = "UPDATE projecttau3 SET last_name = '"+ lname.upper() +"', first_name= '" + fname.upper() + "', aka = '" + aka1.upper() + "', batch_name= '" + batch.upper()\
-                 + "', T_birth = '" + tbirth.upper() + "', current_chapter = '" + current.upper()+ "', root_chapter = '" + root.upper() + "', stat = '" + status.upper() + "', address = '"\
+                 + "', T_birth = '" + str(var_date) + "', current_chapter = '" + current.upper()+ "', root_chapter = '" + root.upper() + "', stat = '" + status.upper() + "', address = '"\
                   + address.upper() + "', photo= %s WHERE member_id = '"+mem_id+"' "
         
         if (sql):
@@ -281,9 +284,9 @@ class Ui_MainWindow(object):
             elif  len(batch) == 0:
                 self.messageBox("Information", " Batch Name Cannot be empty!")
                 return
-            elif  len(tbirth)== 0:
-                self.messageBox("Information", " Triskelion Birth Cannot be empty!")
-                return
+            # elif  len(tbirth)== 0:
+            #     self.messageBox("Information", " Triskelion Birth Cannot be empty!")
+            #     return
             elif  len(current)== 0:
                 self.messageBox("Information", " Current Chapter Cannot be empty!")
                 return
@@ -813,7 +816,8 @@ class Ui_MainWindow(object):
         self.tbirth_label.setObjectName("tbirth_label")
 
         #T-BIRTH EDIT TEXTBOX
-        self.tbirth_edit = QtWidgets.QLineEdit(self.centralwidget)
+        #self.tbirth_edit = QtWidgets.QLineEdit(self.centralwidget)
+        self.tbirth_edit = QtWidgets.QDateEdit(self.centralwidget)
         self.tbirth_edit.setGeometry(QtCore.QRect(500, 500, 251, 31))
         self.tbirth_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
         self.tbirth_edit.setObjectName("tbirth_edit")
@@ -1269,7 +1273,7 @@ class Ui_MainWindow(object):
         self.search_lname_edit.setPlaceholderText(_translate("MainWindow", "Enter Last Name"))
         self.search_fname_edit.setPlaceholderText(_translate("MainWindow", "Enter First Name"))
         self.search_edit.setPlaceholderText(_translate("MainWindow", "Enter Last Name or Chapter"))
-        self.tbirth_edit.setPlaceholderText(_translate("MainWindow", "MM/DD/YYYY"))
+        #self.tbirth_edit.setPlaceholderText(_translate("MainWindow", "MM/DD/YYYY"))
 
         self.add_btn.setText(_translate("MainWindow", "Add New"))
         self.save_btn.setText(_translate("MainWindow", "Save"))

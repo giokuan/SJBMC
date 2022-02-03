@@ -117,8 +117,9 @@ class Ui_MainClear(object):
         font.setBold(True)
         font.setWeight(75)
         self.print_btn.setFont(font)
-        self.print_btn.setStyleSheet("background-color: qlineargradient(spread:pad,\
-         x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 0, 0, 0), stop:1 rgba(255, 255, 255, 255));")
+        self.print_btn.setStyleSheet("background-color: \
+            qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(0, 0, 0, 0),\
+            stop:1 rgba(255, 255, 255, 255));")
         self.print_btn.setObjectName("print_btn")
         self.print_btn.clicked.connect(self.printPreviewListMethod)
         icon = QtGui.QIcon()
