@@ -53,9 +53,9 @@ class Ui_mainForm(object):
 
     def setupUi(self, mainForm):
         mainForm.setObjectName("mainForm")
-        mainForm.resize(588, 459)
-        mainForm.setMaximumSize(QtCore.QSize(588, 459))
-        mainForm.setMinimumSize(QtCore.QSize(588, 459))
+        mainForm.resize(588, 440)
+        mainForm.setMaximumSize(QtCore.QSize(588, 440))
+        mainForm.setMinimumSize(QtCore.QSize(588, 440))
         mainForm.setWindowFlags( QtCore.Qt.WindowCloseButtonHint )
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("logo/ico_logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -80,6 +80,7 @@ class Ui_mainForm(object):
         self.pass_edit = QtWidgets.QLineEdit(self.centralwidget)
         self.pass_edit.setGeometry(QtCore.QRect(210, 250, 201, 31))
         self.pass_edit.setObjectName("pass_edit")
+        self.pass_edit.setEchoMode(QtWidgets.QLineEdit.Password)
         
         self.user_label = QtWidgets.QLabel(self.centralwidget)
         self.user_label.setGeometry(QtCore.QRect(110, 200, 81, 31))
@@ -123,9 +124,9 @@ class Ui_mainForm(object):
         self.logo_label.raise_()
         
         mainForm.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(mainForm)
-        self.statusbar.setObjectName("statusbar")
-        mainForm.setStatusBar(self.statusbar)
+        # self.statusbar = QtWidgets.QStatusBar(mainForm)
+        # self.statusbar.setObjectName("statusbar")
+        # mainForm.setStatusBar(self.statusbar)
 
         self.retranslateUi(mainForm)
         QtCore.QMetaObject.connectSlotsByName(mainForm)
