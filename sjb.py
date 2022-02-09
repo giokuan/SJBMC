@@ -553,9 +553,9 @@ class Ui_MainWindow(object):
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1129, 788)
-        MainWindow.setMaximumSize(QtCore.QSize(1129, 788))
-        MainWindow.setMinimumSize(QtCore.QSize(1129, 788))
+        MainWindow.resize(1129, 770)
+        MainWindow.setMaximumSize(QtCore.QSize(1129, 770))
+        MainWindow.setMinimumSize(QtCore.QSize(1129, 770))
         MainWindow.setWindowFlags( QtCore.Qt.WindowCloseButtonHint )
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -1203,9 +1203,9 @@ class Ui_MainWindow(object):
         self.exit_btn.raise_()
         
         MainWindow.setCentralWidget(self.centralwidget)
-        self.statusbar = QtWidgets.QStatusBar(MainWindow)
-        self.statusbar.setObjectName("statusbar")
-        MainWindow.setStatusBar(self.statusbar)
+        # self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        # self.statusbar.setObjectName("statusbar")
+        # MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
