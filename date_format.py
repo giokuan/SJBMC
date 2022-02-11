@@ -1,13 +1,14 @@
+import datetime
+from sjb import *
+
+def format_date():
+	
 
 
-def format_date(m):
-	if m == 1:
-		month = "January"
-		print(month)
+	x = datetime.datetime(2018, 6, 1)
 
-	elif m == 2:
-		month = "February"
+	print(x.strftime("%B"))
 
-month = format_date(1)
-
-print(str(month) + " 5,1982")
+# month = format_date(1)
+format_date()
+	

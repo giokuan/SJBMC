@@ -5,20 +5,25 @@ from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QVBoxLayout, QH
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox,QFileDialog
 import sys
+# import datetime
 from cert import *
+from PIL import Image
 
 
 
 class Ui_MainWindow(object):
+
+   
 
     def next(self):
         
         x = self.lname_edit.text()
         y = self.fname_edit.text()
         z = (y +" "+ x)
-        tbirth = self.tbirth_edit.text()
-        self.ui.ir_edit.setText(tbirth)
+        # tbirth = self.tbirth_edit.text()       
+        # self.ui.ir_edit.setText(tbirth)
         self.ui.name_edit.setText(z)
+
           
 
 
@@ -30,6 +35,7 @@ class Ui_MainWindow(object):
         #MainWindow.close()
         self.window.show()
         self.next()
+
 
 
     def messageBox(self,title,message):
@@ -88,6 +94,9 @@ class Ui_MainWindow(object):
         """ Save the information in the database"""
 
         p = self.addPic_edit.text()
+        im = Image.open(p)
+        im.save(p, quality=95)
+
         if len(p) == 0:
             self.messageBox("Add Photo","You have no photo selected, \n Default Photo will be use!")
             self.default()
@@ -277,7 +286,10 @@ class Ui_MainWindow(object):
 
     def update(self):
         """ Update information and save information to the database"""
+
         p = self.addPic_edit.text() 
+        im = Image.open(p)
+        im.save(p, quality=95)
         with open(p, 'rb') as f:
             m=f.read()
         
