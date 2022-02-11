@@ -29,6 +29,9 @@ class Ui_MainClear(object):
         dialog = QPrintPreviewDialog()
         dialog.paintRequested.connect(self.handlePaintRequest)
         dialog.exec_()
+
+
+   
     
 
     def setupUi(self, MainClear):
@@ -54,7 +57,11 @@ class Ui_MainClear(object):
         self.label.setObjectName("label")
         
         self.name_edit = QtWidgets.QLineEdit(self.centralwidget)
-        self.name_edit.setGeometry(QtCore.QRect(315, 370, 465, 71))
+        
+        self.name_edit.setAlignment(QtCore.Qt.AlignCenter)              
+        #self.name_edit.textChanged.connect(self.on_text_changed)
+        
+        self.name_edit.setGeometry(QtCore.QRect(307, 370, 500, 71))
         font = QtGui.QFont()
         font.setPointSize(26)
         self.name_edit.setFont(font)

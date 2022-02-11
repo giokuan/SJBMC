@@ -5,10 +5,22 @@ from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QVBoxLayout, QH
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox,QFileDialog
 import sys
-from cert import Ui_MainClear
+from cert import *
+
 
 
 class Ui_MainWindow(object):
+
+    def next(self):
+        
+        x = self.lname_edit.text()
+        y = self.fname_edit.text()
+        z = (y +" "+ x)
+        tbirth = self.tbirth_edit.text()
+        self.ui.ir_edit.setText(tbirth)
+        self.ui.name_edit.setText(z)
+          
+
 
     def open_window(self):
         """ Open the cert form window"""
@@ -17,6 +29,7 @@ class Ui_MainWindow(object):
         self.ui.setupUi(self.window)
         #MainWindow.close()
         self.window.show()
+        self.next()
 
 
     def messageBox(self,title,message):
@@ -117,9 +130,9 @@ class Ui_MainWindow(object):
                 elif  len(batch) == 0:
                     self.messageBox("Information", " Batch Name Cannot be empty!")
                     return
-                elif  len(tbirth)== 0:
-                    self.messageBox("Information", " Triskelion Birth Cannot be empty!")
-                    return
+                # elif  len(tbirth)== 0:
+                #     self.messageBox("Information", " Triskelion Birth Cannot be empty!")
+                #     return
                 elif  len(current)== 0:
                     self.messageBox("Information", " Current Chapter Cannot be empty!")
                     return
@@ -141,6 +154,7 @@ class Ui_MainWindow(object):
                     #self.addbuttom.setEnabled(True)
                     self.cancel()
                     self.loadData()
+                    self.total_res()
 
 
     def cell_click_disabledTextbox(self):
@@ -162,6 +176,7 @@ class Ui_MainWindow(object):
         self.root_edit.setEnabled(False)
         self.status_edit.setEnabled(False)
         self.address_edit.setEnabled(False)
+        self.camera_btn.setEnabled(False)
 
         self.lname_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
         self.fname_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
@@ -240,9 +255,24 @@ class Ui_MainWindow(object):
 
                 for column_number, data in enumerate(row_data):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+           
+            
                   
         except mc.Error as e:
             print ("Error Occured")
+
+    def total_res(self):
+        self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
+        cur=self.conn.cursor()
+        cur.execute("SELECT *  FROM projecttau3")
+        res = cur.fetchall()
+        #print(len(res))
+        counter = len(res)
+       
+        
+        self.total_res_edit.setText(str(counter))
+        
 
 
     def update(self):
@@ -307,6 +337,7 @@ class Ui_MainWindow(object):
                 self.conn.commit()
                 self.loadData()
                 self.cell_click_disabledTextbox()
+                # self.addPic_edit.setEnabled(False)
 
                 #self.cancel()
 
@@ -401,6 +432,7 @@ class Ui_MainWindow(object):
         
     def refresh(self):
         """ Clear all the fields"""
+        self.total_res()
 
         self.id_edit.clear()
         self.lname_edit.clear()
@@ -412,6 +444,7 @@ class Ui_MainWindow(object):
         self.root_edit.clear()
         self.status_edit.clear()
         self.address_edit.clear()
+        self.search_edit.clear()
 
         self.lname_edit.setEnabled(False)
         self.fname_edit.setEnabled(False)
@@ -422,6 +455,7 @@ class Ui_MainWindow(object):
         self.root_edit.setEnabled(False)
         self.status_edit.setEnabled(False)
         self.address_edit.setEnabled(False)
+        #self.addPic_edit.setEnabled(False)
 
         self.edit_btn.setEnabled(True)
         self.add_btn.setEnabled(True)
@@ -512,6 +546,10 @@ class Ui_MainWindow(object):
             
             mycursor.execute("SELECT * FROM projecttau3 WHERE last_name = '"+lname+"' OR current_chapter = '"+lname+"'");
             result = mycursor.fetchall()
+            #print(len(result))
+            counter = len(result)
+
+            self.total_res_edit.setText(str(counter))
           
             self.tableWidget.setRowCount(0)
             for row_number, row_data in enumerate(result):
@@ -563,6 +601,8 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("logo/ico_logo.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
+
+
         
         #BACKGROUND LABEL
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -920,7 +960,27 @@ class Ui_MainWindow(object):
         self.picture_label.setObjectName("picture_label")
         self.picture_label.setPixmap(QtGui.QPixmap("logo/Men.png")) 
         self.picture_label.setScaledContents(True)
+
+
+        # self.total_res_edit = QtWidgets.QLineEdit(self.centralwidget)
+        # self.total_res_edit.setGeometry(QtCore.QRect(140, 400, 41, 21))
+        # font = QtGui.QFont()
+        # font.setPointSize(10)
+        # self.total_res_edit.setFont(font)
+        # self.total_res_edit.setStyleSheet("color: rgb(255, 255, 255);")
+        # self.total_res_edit.setObjectName("total_res_edit")
         
+        self.total_res_edit = QtWidgets.QLineEdit(self.centralwidget)
+        self.total_res_edit.setGeometry(QtCore.QRect(140, 400, 41, 21))
+        self.total_res_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
+        self.total_res_edit.setObjectName("total_res_edit")
+        self.total_res_edit.setEnabled(False)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setPointSize(8)
+        self.total_res_edit.setFont(font)
+        
+
 
         
         ##############-----------------BUTTONS----------------#####################
@@ -1059,6 +1119,7 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("logo/reg.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.add_btn.setIcon(icon)
+        self.add_btn.clicked.connect(self.total_res)
 
         
         #SAVE BUTTON
@@ -1192,6 +1253,7 @@ class Ui_MainWindow(object):
         self.col_btn.raise_()
         self.addPic_edit.raise_()
         self.root_label.raise_()
+        self.total_res_edit.raise_()
         self.root_edit.raise_()
         self.search_frame.raise_()
         self.add_btn.raise_()
@@ -1206,6 +1268,7 @@ class Ui_MainWindow(object):
         # self.statusbar = QtWidgets.QStatusBar(MainWindow)
         # self.statusbar.setObjectName("statusbar")
         # MainWindow.setStatusBar(self.statusbar)
+        self.total_res()
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -1274,6 +1337,8 @@ class Ui_MainWindow(object):
         self.search_fname_edit.setPlaceholderText(_translate("MainWindow", "Enter First Name"))
         self.search_edit.setPlaceholderText(_translate("MainWindow", "Enter Last Name or Chapter"))
         #self.tbirth_edit.setPlaceholderText(_translate("MainWindow", "MM/DD/YYYY"))
+        #self.total_res_label.setText(_translate("MainWindow", "Total:"))
+        
 
         self.add_btn.setText(_translate("MainWindow", "Add New"))
         self.save_btn.setText(_translate("MainWindow", "Save"))
