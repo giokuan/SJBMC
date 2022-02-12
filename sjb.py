@@ -13,7 +13,6 @@ from PIL import Image
 
 class Ui_MainWindow(object):
 
-   
 
     def next(self):
         
@@ -25,8 +24,6 @@ class Ui_MainWindow(object):
         self.ui.name_edit.setText(z)
 
           
-
-
     def open_window(self):
         """ Open the cert form window"""
         self.window =QtWidgets.QMainWindow()
@@ -35,7 +32,6 @@ class Ui_MainWindow(object):
         #MainWindow.close()
         self.window.show()
         self.next()
-
 
 
     def messageBox(self,title,message):
@@ -264,13 +260,12 @@ class Ui_MainWindow(object):
 
                 for column_number, data in enumerate(row_data):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
-
-           
-            
+   
                   
         except mc.Error as e:
             print ("Error Occured")
 
+    
     def total_res(self):
         self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
         cur=self.conn.cursor()
@@ -280,8 +275,7 @@ class Ui_MainWindow(object):
         counter = len(res)
        
         
-        self.total_res_edit.setText(str(counter))
-        
+        self.total_res_edit.setText(str(counter))    
 
 
     def update(self):
@@ -457,6 +451,8 @@ class Ui_MainWindow(object):
         self.status_edit.clear()
         self.address_edit.clear()
         self.search_edit.clear()
+        self.search_lname_edit.clear()
+        self.search_fname_edit.clear()
 
         self.lname_edit.setEnabled(False)
         self.fname_edit.setEnabled(False)
@@ -983,7 +979,7 @@ class Ui_MainWindow(object):
         # self.total_res_edit.setObjectName("total_res_edit")
         
         self.total_res_edit = QtWidgets.QLineEdit(self.centralwidget)
-        self.total_res_edit.setGeometry(QtCore.QRect(140, 400, 41, 21))
+        self.total_res_edit.setGeometry(QtCore.QRect(160, 400, 41, 21))
         self.total_res_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
         self.total_res_edit.setObjectName("total_res_edit")
         self.total_res_edit.setEnabled(False)
