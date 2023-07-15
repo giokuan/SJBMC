@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPainter
 from PyQt5.QtWidgets import QLineEdit, QDialog ,QFileDialog, QInputDialog
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox
-
+import datetime
 
 class Ui_MainClear(object):
 
@@ -29,6 +29,9 @@ class Ui_MainClear(object):
         dialog = QPrintPreviewDialog()
         dialog.paintRequested.connect(self.handlePaintRequest)
         dialog.exec_()
+
+
+   
     
 
     def setupUi(self, MainClear):
@@ -54,7 +57,11 @@ class Ui_MainClear(object):
         self.label.setObjectName("label")
         
         self.name_edit = QtWidgets.QLineEdit(self.centralwidget)
-        self.name_edit.setGeometry(QtCore.QRect(315, 370, 465, 71))
+        
+        self.name_edit.setAlignment(QtCore.Qt.AlignCenter)              
+        #self.name_edit.textChanged.connect(self.on_text_changed)
+        
+        self.name_edit.setGeometry(QtCore.QRect(307, 370, 500, 71))
         font = QtGui.QFont()
         font.setPointSize(26)
         self.name_edit.setFont(font)
@@ -89,6 +96,7 @@ class Ui_MainClear(object):
         self.chapter_edit.setObjectName("chapter_edit")
         
         self.chairman_edit = QtWidgets.QLineEdit(self.centralwidget)
+        self.chairman_edit.setAlignment(QtCore.Qt.AlignCenter)
         self.chairman_edit.setEnabled(True)
         self.chairman_edit.setGeometry(QtCore.QRect(667, 661, 190, 20))
         self.chairman_edit.setStyleSheet("color: rgb(255, 244, 136);""background-color: transparent;")
@@ -99,6 +107,7 @@ class Ui_MainClear(object):
         self.chairman_edit.setObjectName("chairman_edit")
         
         self.date_issued_edit = QtWidgets.QLineEdit(self.centralwidget)
+        self.date_issued_edit.setAlignment(QtCore.Qt.AlignCenter) 
         self.date_issued_edit.setEnabled(True)
         self.date_issued_edit.setGeometry(QtCore.QRect(298, 661, 160, 20))
         self.date_issued_edit.setStyleSheet("color: rgb(255, 244, 136);""background-color: transparent;")
@@ -107,6 +116,8 @@ class Ui_MainClear(object):
         self.date_issued_edit.setFont(font)
         self.date_issued_edit.setFrame(False)
         self.date_issued_edit.setObjectName("date_issued_edit")
+        
+        
        
         
         #PRINT BUTTON
