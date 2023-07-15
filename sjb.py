@@ -117,7 +117,7 @@ class Ui_MainWindow(object):
                 elif  len(batch) == 0:
                     self.messageBox("Information", " Batch Name Cannot be empty!")
                     return
-                elif  len(tbirth)== 0:
+                elif  tbirth.isNull():
                     self.messageBox("Information", " Triskelion Birth Cannot be empty!")
                     return
                 elif  len(current)== 0:
