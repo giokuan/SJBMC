@@ -1,11 +1,13 @@
-from PyQt5 import QtCore, QtGui, QtWidgets,QtSql
-import mysql.connector as mc
-import pymysql
+from PyQt5 import QtCore, QtGui, QtWidgets
+# import mysql.connector as mc
+# import pymysql
 from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QVBoxLayout, QHBoxLayout, QHeaderView,QTableWidget
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox
 import sys
 from sjb import Ui_MainWindow
+import sqlite3
+import os
 
 
 
@@ -34,21 +36,107 @@ class Ui_mainForm(object):
         #sys.exit()
         app.quit()
 
-    def log(self):
+    # def log(self):
 
-        user=self.user_edit.text()
-        password=self.pass_edit.text()
+    #     user=self.user_edit.text()
+    #     password=self.pass_edit.text()
 
-        self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
-        cur=self.conn.cursor()
-        data = cur.execute ("SELECT * from adminlogin WHERE user_name = '"+user+"' AND password = '"+password+"'")
+    #     self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
+    #     cur=self.conn.cursor()
+    #     data = cur.execute ("SELECT * from adminlogin WHERE user_name = '"+user+"' AND password = '"+password+"'")
         
-        if (data):
+    #     if (data):
+    #         self.messageBox("Information", "Login Successful")
+    #         self.open_window()
+    #     else:
+    #         self.messageBox("Information", "Invalid Username or Password")
+    #         return 
+
+    def log(self):
+        user = self.user_edit.text()
+        password = self.pass_edit.text()
+
+        # Connect to SQLite3 database
+        conn = sqlite3.connect("myproject3.db")
+        cur = conn.cursor()
+
+        # Use placeholders to prevent SQL injection
+        cur.execute("SELECT * FROM adminlogin WHERE user_name = ? AND password = ?", (user, password))
+        data = cur.fetchone()
+
+        if data:
             self.messageBox("Information", "Login Successful")
             self.open_window()
         else:
             self.messageBox("Information", "Invalid Username or Password")
-            return 
+
+        # Close the database connection
+        conn.close()
+
+    def create_database(self):
+        database_file = "myproject3.db"
+
+        # Check if the database file already exists
+        if os.path.exists(database_file):
+            print(f"The database file '{database_file}' already exists.")
+            return
+
+        # Connect to SQLite3 database (this will create a new database file if it doesn't exist)
+        conn = sqlite3.connect(database_file)
+        cur = conn.cursor()
+
+        # Create the adminlogin table if it doesn't exist
+        cur.execute('''
+            CREATE TABLE IF NOT EXISTS adminlogin (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_name TEXT,
+                password TEXT
+            )
+        ''')
+
+        # Commit the changes and close the connection
+        self.messageBox("Information", "Database Created")
+        conn.commit()
+        conn.close()
+
+    def retrieve_data():
+        conn = sqlite3.connect("myproject3.db")
+        cur = conn.cursor()
+
+        # Example: Select all rows from the adminlogin table
+        cur.execute("SELECT * FROM adminlogin")
+        
+        # Fetch all rows as a list of tuples
+        rows = cur.fetchall()
+
+        # Print or process the retrieved data
+        for row in rows:
+            print(row)
+
+        # Close the database connection
+        conn.close()
+
+    def insert_data(self):
+        user=self.user_edit.text()
+        password=self.pass_edit.text()
+
+        conn = sqlite3.connect("myproject3.db")
+        cur = conn.cursor()
+
+        # Example: Insert a new row into the adminlogin table
+        cur.execute("INSERT INTO adminlogin (user_name, password) VALUES (?, ?)", (user, password))
+
+        self.messageBox("Information", "Data added")
+
+        # Commit the changes
+        conn.commit()
+
+        # Close the database connection
+        conn.close()
+
+    # Call the function to insert new data
+   
+
 
 
     def setupUi(self, mainForm):
@@ -63,10 +151,13 @@ class Ui_mainForm(object):
         self.centralwidget = QtWidgets.QWidget(mainForm)
         self.centralwidget.setObjectName("centralwidget")
         
+        
         self.login = QtWidgets.QPushButton(self.centralwidget)
         self.login.setGeometry(QtCore.QRect(210, 320, 91, 41))
         self.login.setObjectName("login")
         self.login.clicked.connect(self.log)
+        # self.login.clicked.connect(self.retrieve_data)
+        # self.login.clicked.connect(self.insert_data)
         
         self.cancel = QtWidgets.QPushButton(self.centralwidget)
         self.cancel.setGeometry(QtCore.QRect(320, 320, 91, 41))
@@ -122,6 +213,8 @@ class Ui_mainForm(object):
         self.user_label.raise_()
         self.pass_label.raise_()
         self.logo_label.raise_()
+
+
         
         mainForm.setCentralWidget(self.centralwidget)
         # self.statusbar = QtWidgets.QStatusBar(mainForm)
@@ -138,6 +231,7 @@ class Ui_mainForm(object):
         self.cancel.setText(_translate("mainForm", "Cancel"))
         self.user_label.setText(_translate("mainForm", "Username :"))
         self.pass_label.setText(_translate("mainForm", "Password :"))
+      
 
 
 if __name__ == "__main__":

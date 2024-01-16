@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets,QtSql
-import mysql.connector as mc
-import pymysql
+# import mysql.connector as mc
+# import pymysql
 from PyQt5.QtWidgets import QTableWidgetItem, QAbstractItemView, QVBoxLayout, QHBoxLayout, QHeaderView,QTableWidget
 from PyQt5.QtWidgets import QLineEdit
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QMessageBox,QFileDialog
@@ -8,10 +8,39 @@ import sys
 # import datetime
 from cert import *
 from PIL import Image
-
+import sqlite3
+from PyQt5.QtGui import QPixmap
+from datetime import datetime
 
 
 class Ui_MainWindow(object):
+
+    # def create_database(self):
+    #     conn = sqlite3.connect("myproject3.db")
+    #     cur = conn.cursor()
+
+    #     # Create the projecttau3 table if it doesn't exist
+    #     cur.execute('''
+    #         CREATE TABLE IF NOT EXISTS projecttau3 (
+    #             id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #             last_name TEXT,
+    #             first_name TEXT,
+    #             aka TEXT,
+    #             batch_name TEXT,
+    #             T_birth DATE,
+    #             current_chapter TEXT,
+    #             root_chapter TEXT,
+    #             stat TEXT,
+    #             address TEXT,
+    #             photo BLOB
+    #         )
+    #     ''')
+
+    #     self.messageBox("Information", "database created")
+
+    #     # Commit the changes and close the connection
+    #     conn.commit()
+    #     conn.close()
 
 
     def next(self):
@@ -86,6 +115,39 @@ class Ui_MainWindow(object):
         pass
     
 
+    # def insert_data(self):
+    #     """ Save the information in the database"""
+
+    #     p = self.addPic_edit.text()
+    #     im = Image.open(p)
+    #     im.save(p, quality=95)
+
+    #     if len(p) == 0:
+    #         self.messageBox("Add Photo","You have no photo selected, \n Default Photo will be use!")
+    #         self.default()
+    #     else:
+            
+        
+    #         with open(p, 'rb') as f:
+    #             m=f.read()
+
+    #         lname=self.lname_edit.text()
+    #         fname=self.fname_edit.text()
+    #         aka1=self.aka_edit.text()
+    #         batch=self.batch_edit.text()
+    #         tbirth=self.tbirth_edit.date()
+    #         var_date = tbirth.toPyDate()
+
+    #         current=self.current_edit.text()
+    #         root=self.root_edit.text()
+    #         status=self.status_edit.text()
+    #         address=self.address_edit.text()
+
+    #         self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
+       
+    #         query=("INSERT INTO projecttau3 (last_name, first_name, aka, batch_name, T_birth, current_chapter, root_chapter, stat, address,photo) VALUES  (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    #         cur=self.conn.cursor()
+    #         data= cur.execute(query, (lname.upper(),fname.upper(),aka1.upper(),batch.upper(),var_date,current.upper(),root.upper(),status.upper(),address.upper(),m))
     def insert_data(self):
         """ Save the information in the database"""
 
@@ -94,32 +156,36 @@ class Ui_MainWindow(object):
         im.save(p, quality=95)
 
         if len(p) == 0:
-            self.messageBox("Add Photo","You have no photo selected, \n Default Photo will be use!")
+            self.messageBox("Add Photo", "You have no photo selected, \n Default Photo will be used!")
             self.default()
         else:
-            
-        
             with open(p, 'rb') as f:
-                m=f.read()
+                m = f.read()
 
-            lname=self.lname_edit.text()
-            fname=self.fname_edit.text()
-            aka1=self.aka_edit.text()
-            batch=self.batch_edit.text()
-            tbirth=self.tbirth_edit.date()
+            lname = self.lname_edit.text()
+            fname = self.fname_edit.text()
+            aka1 = self.aka_edit.text()
+            batch = self.batch_edit.text()
+            tbirth = self.tbirth_edit.date()
             var_date = tbirth.toPyDate()
 
-            current=self.current_edit.text()
-            root=self.root_edit.text()
-            status=self.status_edit.text()
-            address=self.address_edit.text()
+            current = self.current_edit.text()
+            root = self.root_edit.text()
+            status = self.status_edit.text()
+            address = self.address_edit.text()
 
-            self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
-       
-            query=("INSERT INTO projecttau3 (last_name, first_name, aka, batch_name, T_birth, current_chapter, root_chapter, stat, address,photo) VALUES  (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s)")
-            cur=self.conn.cursor()
-            data= cur.execute(query, (lname.upper(),fname.upper(),aka1.upper(),batch.upper(),var_date,current.upper(),root.upper(),status.upper(),address.upper(),m))
-        
+            # Connect to SQLite3 database
+            self.conn = sqlite3.connect("myproject3.db")
+
+            query = ("INSERT INTO projecttau3 (last_name, first_name, aka, batch_name, T_birth, current_chapter, root_chapter, stat, address, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+            cur = self.conn.cursor()
+            data = cur.execute(query, (lname.upper(), fname.upper(), aka1.upper(), batch.upper(), var_date, current.upper(), root.upper(), status.upper(), address.upper(), m))
+
+            # # Commit the changes
+            # self.conn.commit()
+
+            # # Close the database connection
+            # self.conn.close()
 
             if (data):
                 msg=QMessageBox()
@@ -194,65 +260,131 @@ class Ui_MainWindow(object):
         self.address_edit.setStyleSheet("background-color: rgb(207, 207, 207);color: rgb(24, 24, 24)")
 
 
-    def cell_click(self,columnCount,rowCount):
-        """ Give you the specific information of particular person when you clicked the
-        the member ID field """
+    # def cell_click(self,columnCount,rowCount):
+    #     """ Give you the specific information of particular person when you clicked the
+    #     the member ID field """
 
-        self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
-        cur=self.conn.cursor()
-        item = self.tableWidget.selectedItems()
-        i = (item[0].text())
-        if rowCount != (0):
-            return
+    #     self.conn=sqlite3.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
+    #     cur=self.conn.cursor()
+    #     item = self.tableWidget.selectedItems()
+    #     i = (item[0].text())
+    #     if rowCount != (0):
+    #         return
 
-        else:
-            cur.execute ("SELECT * from projecttau3 WHERE member_id=" +str(i))
-            col = cur.fetchone()
-            #print (row)           
-            lname = col[1]
-            fname = col[2]
-            aka1 = col[3]
-            batch = col [4]
-            tbirth = col[5]
-            current = col[6]
-            root = col[7]
-            status = col[8]
-            add = col[9]
-            pic = col[10]
+    #     else:
+    #         cur.execute ("SELECT * from projecttau3 WHERE member_id=" +str(i))
+    #         col = cur.fetchone()
+    #         #print (row)           
+    #         lname = col[1]
+    #         fname = col[2]
+    #         aka1 = col[3]
+    #         batch = col [4]
+    #         tbirth = col[5]
+    #         current = col[6]
+    #         root = col[7]
+    #         status = col[8]
+    #         add = col[9]
+    #         pic = col[10]
 
-        self.id_edit.setText(i)
-        self.lname_edit.setText(lname)
-        self.fname_edit.setText(fname)
-        self.aka_edit.setText(aka1)
-        self.batch_edit.setText(batch)
-        self.tbirth_edit.setDate(tbirth)
-        self.current_edit.setText(current)
-        self.root_edit.setText(root)
-        self.status_edit.setText(status)
-        self.address_edit.setText(add)
-        self.cell_click_disabledTextbox()
+    #     self.id_edit.setText(i)
+    #     self.lname_edit.setText(lname)
+    #     self.fname_edit.setText(fname)
+    #     self.aka_edit.setText(aka1)
+    #     self.batch_edit.setText(batch)
+    #     self.tbirth_edit.setDate(tbirth)
+    #     self.current_edit.setText(current)
+    #     self.root_edit.setText(root)
+    #     self.status_edit.setText(status)
+    #     self.address_edit.setText(add)
+    #     self.cell_click_disabledTextbox()
 
-        with open('logo/pic.png', 'wb') as f:
-                f.write(pic)
+    #     with open('logo/pic.png', 'wb') as f:
+    #             f.write(pic)
+    #             self.addPic_edit.setText('logo/pic.png')
+    #             self.picture_label.setPixmap(QtGui.QPixmap("logo/pic.png"))
+        
+    def cell_click(self, columnCount, rowCount):
+        """Get specific information when clicking the member ID field"""
+
+        try:
+            # Connect to SQLite3 database
+            conn = sqlite3.connect("myproject3.db")
+            cur = conn.cursor()
+
+            item = self.tableWidget.selectedItems()
+            i = int(item[0].text())
+
+            if rowCount != 0:
+                return
+            else:
+                cur.execute("SELECT * FROM projecttau3 WHERE id=?", (i,))
+                # cur.execute ("SELECT * from projecttau3 WHERE member_id=" +str(i))
+                col = cur.fetchone()
+
+                lname, fname, aka1, batch, tbirth, current, root, status, add, pic = col[1:11]
+
+                # Set values in the UI elements
+                self.id_edit.setText(str(i))
+                self.lname_edit.setText(lname)
+                self.fname_edit.setText(fname)
+                self.aka_edit.setText(aka1)
+                self.batch_edit.setText(batch)
+                self.tbirth_edit.setDate(datetime.strptime(tbirth, '%Y-%m-%d').date())
+                self.current_edit.setText(current)
+                self.root_edit.setText(root)
+                self.status_edit.setText(status)
+                self.address_edit.setText(add)
+                self.cell_click_disabledTextbox()
+
+                # Save the image to a file and display it
+                with open('logo/pic.png', 'wb') as f:
+                    f.write(pic)
                 self.addPic_edit.setText('logo/pic.png')
-                self.picture_label.setPixmap(QtGui.QPixmap("logo/pic.png"))
+                self.picture_label.setPixmap(QPixmap("logo/pic.png"))
+
+        except sqlite3.Error as e:
+            print("Error Occurred:", e)
 
  
-    def loadData(self):
-        """ load data in the table"""
+    # def loadData(self):
+    #     """ load data in the table"""
         
-        row = 0
-        try: 
-            mydb = mc.connect(
-                host = "localhost",
-                user = "root",
-                password= "noahkuan03",
-                database = "myproject3"
-            )
-            mycursor = mydb.cursor()
-            mycursor.execute("SELECT * FROM projecttau3 ORDER BY last_name ASC" )
-            result = mycursor.fetchall()
+    #     row = 0
+    #     try: 
+    #         mydb = mc.connect(
+    #             host = "localhost",
+    #             user = "root",
+    #             password= "noahkuan03",
+    #             database = "myproject3"
+    #         )
+    #         mycursor = mydb.cursor()
+    #         mycursor.execute("SELECT * FROM projecttau3 ORDER BY last_name ASC" )
+    #         result = mycursor.fetchall()
             
+    #         self.tableWidget.setRowCount(0)
+
+    #         for row_number, row_data in enumerate(result):
+    #             self.tableWidget.insertRow(row_number)
+
+    #             for column_number, data in enumerate(row_data):
+    #                 self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+   
+                  
+    #     except mc.Error as e:
+    #         print ("Error Occured")
+                
+
+    def loadData(self):
+        """Load data into the table"""
+
+        try:
+            # Connect to SQLite3 database
+            conn = sqlite3.connect("myproject3.db")
+            cur = conn.cursor()
+
+            cur.execute("SELECT * FROM projecttau3 ORDER BY last_name ASC")
+            result = cur.fetchall()
+
             self.tableWidget.setRowCount(0)
 
             for row_number, row_data in enumerate(result):
@@ -260,14 +392,13 @@ class Ui_MainWindow(object):
 
                 for column_number, data in enumerate(row_data):
                     self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
-   
-                  
-        except mc.Error as e:
-            print ("Error Occured")
+
+        except sqlite3.Error as e:
+            print("Error Occurred:", e)
 
     
     def total_res(self):
-        self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
+        self.conn=sqlite3.connect("myproject3.db")
         cur=self.conn.cursor()
         cur.execute("SELECT *  FROM projecttau3")
         res = cur.fetchall()
@@ -278,74 +409,111 @@ class Ui_MainWindow(object):
         self.total_res_edit.setText(str(counter))    
 
 
-    def update(self):
-        """ Update information and save information to the database"""
+    # def update(self):
+    #     """ Update information and save information to the database"""
 
-        p = self.addPic_edit.text() 
+    #     p = self.addPic_edit.text() 
+    #     im = Image.open(p)
+    #     im.save(p, quality=95)
+    #     with open(p, 'rb') as f:
+    #         m=f.read()
+        
+    #     id=self.id_edit.text()
+    #     lname=self.lname_edit.text()
+    #     fname=self.fname_edit.text()
+    #     aka1=self.aka_edit.text()
+    #     batch=self.batch_edit.text()
+    #     tbirth=self.tbirth_edit.date()
+    #     var_date = tbirth.toPyDate()
+    #     current=self.current_edit.text()
+    #     root=self.root_edit.text()
+    #     status=self.status_edit.text()
+    #     address=self.address_edit.text()
+        
+    #     self.conn=sqlite3.connect("myproject3.db")
+    #     cur=self.conn.cursor()
+
+    #     sql = "UPDATE projecttau3 SET last_name = '"+ lname.upper() +"', first_name= '" + fname.upper() + "', aka = '" + aka1.upper() + "', batch_name= '" + batch.upper()\
+    #              + "', T_birth = '" + str(var_date) + "', current_chapter = '" + current.upper()+ "', root_chapter = '" + root.upper() + "', stat = '" + status.upper() + "', address = '"\
+    #               + address.upper() + "', photo= %s WHERE id = '"+ id+"' "
+        
+    #     if (sql):
+    #         msg=QMessageBox()
+    #         if    len(lname) == 0:
+    #             self.messageBox("Information", " Last Name Cannot be empty!")
+    #             return
+    #         elif  len(fname) == 0:
+    #             self.messageBox("Information", " First Name Cannot be empty!")
+    #             return
+    #         elif  len(aka1)  == 0:
+    #             self.messageBox("Information", " A.K.A Cannot be empty!")
+    #             return
+    #         elif  len(batch) == 0:
+    #             self.messageBox("Information", " Batch Name Cannot be empty!")
+    #             return
+    #         # elif  len(tbirth)== 0:
+    #         #     self.messageBox("Information", " Triskelion Birth Cannot be empty!")
+    #         #     return
+    #         elif  len(current)== 0:
+    #             self.messageBox("Information", " Current Chapter Cannot be empty!")
+    #             return
+    #         elif  len(root)== 0:
+    #             self.messageBox("Information", " Root Chapter Cannot be empty!")
+    #             return
+    #         elif  len(status)== 0:
+    #             self.messageBox("Information", " Status Cannot be empty!")
+    #             return
+    #         elif  len(address) == 0:
+    #             self.messageBox("Information", " Address Cannot be empty!")
+    #             return
+                
+
+    #         else:
+    #             cur.execute(sql,m)
+    #             self.messageBox("Tau Gamma Phi", " Member Data Updated")
+    #             self.conn.commit()
+    #             self.loadData()
+    #             self.cell_click_disabledTextbox()
+    #             # self.addPic_edit.setEnabled(False)
+
+    #             #self.cancel()
+        
+    def update(self):
+        """Update information and save information to the database"""
+
+        p = self.addPic_edit.text()
         im = Image.open(p)
         im.save(p, quality=95)
         with open(p, 'rb') as f:
-            m=f.read()
-        
-        mem_id=self.id_edit.text()
-        lname=self.lname_edit.text()
-        fname=self.fname_edit.text()
-        aka1=self.aka_edit.text()
-        batch=self.batch_edit.text()
-        tbirth=self.tbirth_edit.date()
+            m = f.read()
+
+        id = self.id_edit.text()
+        lname = self.lname_edit.text()
+        fname = self.fname_edit.text()
+        aka1 = self.aka_edit.text()
+        batch = self.batch_edit.text()
+        tbirth = self.tbirth_edit.date()
         var_date = tbirth.toPyDate()
-        current=self.current_edit.text()
-        root=self.root_edit.text()
-        status=self.status_edit.text()
-        address=self.address_edit.text()
-        
-        self.conn=pymysql.connect(host="localhost", user="root", password="noahkuan03", db="myproject3")
-        cur=self.conn.cursor()
+        current = self.current_edit.text()
+        root = self.root_edit.text()
+        status = self.status_edit.text()
+        address = self.address_edit.text()
 
-        sql = "UPDATE projecttau3 SET last_name = '"+ lname.upper() +"', first_name= '" + fname.upper() + "', aka = '" + aka1.upper() + "', batch_name= '" + batch.upper()\
-                 + "', T_birth = '" + str(var_date) + "', current_chapter = '" + current.upper()+ "', root_chapter = '" + root.upper() + "', stat = '" + status.upper() + "', address = '"\
-                  + address.upper() + "', photo= %s WHERE member_id = '"+mem_id+"' "
-        
-        if (sql):
-            msg=QMessageBox()
-            if    len(lname) == 0:
-                self.messageBox("Information", " Last Name Cannot be empty!")
-                return
-            elif  len(fname) == 0:
-                self.messageBox("Information", " First Name Cannot be empty!")
-                return
-            elif  len(aka1)  == 0:
-                self.messageBox("Information", " A.K.A Cannot be empty!")
-                return
-            elif  len(batch) == 0:
-                self.messageBox("Information", " Batch Name Cannot be empty!")
-                return
-            # elif  len(tbirth)== 0:
-            #     self.messageBox("Information", " Triskelion Birth Cannot be empty!")
-            #     return
-            elif  len(current)== 0:
-                self.messageBox("Information", " Current Chapter Cannot be empty!")
-                return
-            elif  len(root)== 0:
-                self.messageBox("Information", " Root Chapter Cannot be empty!")
-                return
-            elif  len(status)== 0:
-                self.messageBox("Information", " Status Cannot be empty!")
-                return
-            elif  len(address) == 0:
-                self.messageBox("Information", " Address Cannot be empty!")
-                return
-                
+        self.conn = sqlite3.connect("myproject3.db")
+        cur = self.conn.cursor()
 
-            else:
-                cur.execute(sql,m)
-                self.messageBox("Tau Gamma Phi", " Member Data Updated")
-                self.conn.commit()
-                self.loadData()
-                self.cell_click_disabledTextbox()
-                # self.addPic_edit.setEnabled(False)
+        sql = "UPDATE projecttau3 SET last_name=?, first_name=?, aka=?, batch_name=?, T_birth=?, current_chapter=?, root_chapter=?, stat=?, address=?, photo=? WHERE id=?"
 
-                #self.cancel()
+        try:
+            cur.execute(sql, (lname.upper(), fname.upper(), aka1.upper(), batch.upper(), str(var_date), current.upper(), root.upper(), status.upper(), address.upper(), m, id))
+            self.conn.commit()
+            self.messageBox("Tau Gamma Phi", "Member Data Updated")
+            self.loadData()
+            self.cell_click_disabledTextbox()
+        except sqlite3.Error as e:
+            self.messageBox("Error", f"An error occurred: {e}")
+        finally:
+            self.conn.close()
 
 
     def add(self):
@@ -379,6 +547,7 @@ class Ui_MainWindow(object):
         self.id_edit.clear()
         self.search_edit.clear()
         self.default()
+     
 
         self.lname_edit.setStyleSheet("background-color: rgb(24, 24, 24);color: rgb(6, 254, 192)")
         self.fname_edit.setStyleSheet("background-color: rgb(24, 24, 24);color: rgb(6, 254, 192)")
@@ -539,46 +708,80 @@ class Ui_MainWindow(object):
         self.search_edit.clear()
 
 
-    def search(self): 
-        """ return a person name or a chapter"""   
-        row = 0
-        try: 
-            mydb = mc.connect(
-                host = "localhost",
-                user = "root",
-                password= "noahkuan03",
-                database = "myproject3"
-            )
-            mycursor = mydb.cursor()
-            lname = self.search_edit.text()
+    # def search(self): 
+    #     """ return a person name or a chapter"""   
+    #     row = 0
+    #     try: 
+    #         lname = self.search_edit.text().strip()
+
+    #         if not lname:
+    #             self.messageBox("Information", "Search input cannot be empty.")
+    #             return
+    #         mydb = sqlite3.connect(
+    #             "myproject3.db"
+    #         )
+    #         mycursor = mydb.cursor()
+    #         lname = self.search_edit.text()
             
-            mycursor.execute("SELECT * FROM projecttau3 WHERE last_name = '"+lname+"' OR current_chapter = '"+lname+"'");
-            result = mycursor.fetchall()
-            #print(len(result))
-            counter = len(result)
+    #         sql = "SELECT * FROM projecttau3 WHERE last_name = ? OR current_chapter = ?"
+    #         mycursor.execute(sql, (lname, lname))
+    #         result = mycursor.fetchall()
+    #         #print(len(result))
+    #         counter = len(result)
 
-            self.total_res_edit.setText(str(counter))
+    #         self.total_res_edit.setText(str(counter))
           
-            self.tableWidget.setRowCount(0)
-            for row_number, row_data in enumerate(result):
-                self.tableWidget.insertRow(row_number)
+    #         self.tableWidget.setRowCount(0)
+    #         for row_number, row_data in enumerate(result):
+    #             self.tableWidget.insertRow(row_number)
 
-                for column_number, data in enumerate(row_data):
-                    self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+    #             for column_number, data in enumerate(row_data):
+    #                 self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
                   
-        except mc.Error as e:
-            print ("Error Occured")
+    #     except sqlite3.Error as e:
+    #         print ("Error Occured")
+        
+    def search(self):
+        """Return a person name or a chapter"""
+        try:
+            lname = self.search_edit.text().strip()
+
+            if not lname:
+                self.messageBox("Information", "Search input cannot be empty.")
+                return
+
+            # Connect to SQLite3 database
+            conn = sqlite3.connect("myproject3.db")
+            cur = conn.cursor()
+
+            # Use placeholders in the SQL query
+            cur.execute("SELECT * FROM projecttau3 WHERE UPPER(last_name) = UPPER(?) OR UPPER(current_chapter) = UPPER(?)", (lname, lname))
+
+            result = cur.fetchall()
+
+            counter = len(result)
+            self.total_res_edit.setText(str(counter))
+
+            if counter == 0:
+                self.messageBox("Information", "No results found.")
+            else:
+                self.tableWidget.setRowCount(0)
+                for row_number, row_data in enumerate(result):
+                    self.tableWidget.insertRow(row_number)
+
+                    for column_number, data in enumerate(row_data):
+                        self.tableWidget.setItem(row_number, column_number, QTableWidgetItem(str(data)))
+
+        except sqlite3.Error as e:
+            print("Error Occurred:", e)
 
     
     def advance_search(self):
         """ return specific person"""
         row = 0
        
-        mydb = mc.connect(
-            host = "localhost",
-            user = "root",
-            password= "noahkuan03",
-            database = "myproject3"
+        mydb =sqlite3.connect(
+            "myproject3.db"
         )
         mycursor = mydb.cursor()
         lname = self.search_lname_edit.text()
@@ -1128,6 +1331,7 @@ class Ui_MainWindow(object):
         icon.addPixmap(QtGui.QPixmap("logo/reg.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.add_btn.setIcon(icon)
         self.add_btn.clicked.connect(self.total_res)
+        # self.add_btn.clicked.connect(self.create_database)
 
         
         #SAVE BUTTON
